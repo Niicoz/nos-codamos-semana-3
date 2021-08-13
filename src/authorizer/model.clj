@@ -3,19 +3,29 @@
   (:require [schema.core :as s]))
 (s/set-fn-validation! true)
 
+(defn uuid [] (java.util.UUID/randomUUID))
 
-(s/def Purchase
-  {:id s/Int
-   :client-cpf s/Str
-   :date     s/Str
-   :value    (s/pred pos-int? 'inteiro-positivo)
-   :establishment    s/Str
-   :category s/Str})
+(defn new-client
+  ([uuid name cpf email]
+   {:client/id    uuid
+    :client/name  name
+    :client/cpf   cpf
+    :client/email email}))
 
-(s/def Purchases [Purchase])
+(defn new-card
+  ([uuid number cvv validate limit ]
+   {:card/id    uuid
+    :card/number  number
+    :card/cvv   cvv
+    :card/validate validate
+    :card/limit limit}))
 
-(s/def Total
-  {:category  s/Str
-   :total-value s/Int})
+(defn new-purchase
+  ([uuid date value establishment category client-id]
+   {:purchase/id            uuid
+    :purchase/date          date
+    :purchase/value         value
+    :purchase/establishment establishment
+    :purchase/category      category
+    :purchase/client        [:client/id client-id]}))
 
-(s/def Total-by-category [Total])
